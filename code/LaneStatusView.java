@@ -10,23 +10,22 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.*;
-import javax.swing.event.*;
 
 public class LaneStatusView implements ActionListener, LaneObserver, PinsetterObserver {
 
 	private JPanel jp;
 
-	private JLabel curBowler, foul, pinsDown;
+	private JLabel curBowler, pinsDown;
 	private JButton viewLane;
 	private JButton viewPinSetter, maintenance;
 
 	private PinSetterView psv;
 	private LaneView lv;
 	private Lane lane;
-	int laneNum;
+	private int laneNum;
 
-	boolean laneShowing;
-	boolean psShowing;
+	private boolean laneShowing;
+	private boolean psShowing;
 
 	public LaneStatusView(Lane lane, int laneNum ) {
 
@@ -48,8 +47,6 @@ public class LaneStatusView implements ActionListener, LaneObserver, PinsetterOb
 		jp.setLayout(new FlowLayout());
 		JLabel cLabel = new JLabel( "Now Bowling: " );
 		curBowler = new JLabel( "(no one)" );
-		JLabel fLabel = new JLabel( "Foul: " );
-		foul = new JLabel( " " );
 		JLabel pdLabel = new JLabel( "Pins Down: " );
 		pinsDown = new JLabel( "0" );
 
@@ -57,7 +54,6 @@ public class LaneStatusView implements ActionListener, LaneObserver, PinsetterOb
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.setLayout(new FlowLayout());
 
-		Insets buttonMargin = new Insets(4, 4, 4, 4);
 
 		viewLane = new JButton("View Lane");
 		JPanel viewLanePanel = new JPanel();
@@ -78,74 +74,88 @@ public class LaneStatusView implements ActionListener, LaneObserver, PinsetterOb
 		maintenance.addActionListener(this);
 		maintenancePanel.add(maintenance);
 
-		viewLane.setEnabled( false );
-		viewPinSetter.setEnabled( false );
-
+		setLaneAndPinSetterStatus(false);
 
 		buttonPanel.add(viewLanePanel);
 		buttonPanel.add(viewPinSetterPanel);
 		buttonPanel.add(maintenancePanel);
 
+//		JLabel cLabel = addLabeltojp( "Now Bowling: " );
 		jp.add( cLabel );
 		jp.add( curBowler );
 //		jp.add( fLabel );
 //		jp.add( foul );
 		jp.add( pdLabel );
 		jp.add( pinsDown );
-		
+
 		jp.add(buttonPanel);
 
 	}
 
-	public JPanel showLane() {
+	public JPanel showLane(int laneCount) {
+		jp.setBorder(new TitledBorder("Lane" + ++laneCount ));
 		return jp;
 	}
 
 	public void actionPerformed( ActionEvent e ) {
-		if ( lane.isPartyAssigned() ) { 
+		if ( lane.isPartyAssigned() ) {
 			if (e.getSource().equals(viewPinSetter)) {
-				if ( psShowing == false ) {
-					psv.show();
-					psShowing=true;
-				} else if ( psShowing == true ) {
-					psv.hide();
-					psShowing=false;
-				}
+				viewPinSetterClicked();
 			}
-		}
-		if (e.getSource().equals(viewLane)) {
-			if ( lane.isPartyAssigned() ) { 
-				if ( laneShowing == false ) {
-					lv.show();
-					laneShowing=true;
-				} else if ( laneShowing == true ) {
-					lv.hide();
-					laneShowing=false;
-				}
+			if (e.getSource().equals(viewLane)) {
+				viewLaneClicked();
 			}
-		}
-		if (e.getSource().equals(maintenance)) {
-			if ( lane.isPartyAssigned() ) {
+			if (e.getSource().equals(maintenance)) {
 				lane.unPauseGame();
 				maintenance.setBackground( Color.GREEN );
+
 			}
+
+		}
+
+
+	}
+
+	public void  viewLaneClicked(){
+		if (laneShowing) {
+			lv.hide();
+			laneShowing = false;
+		} else {
+			lv.show();
+			laneShowing=true;
 		}
 	}
 
+	public void viewPinSetterClicked(){
+		if (psShowing) {
+			psv.hide();
+			psShowing=false;
+		} else {
+			psv.show();
+			psShowing=true;
+		}
+	}
 	public void receiveLaneEvent(LaneEvent le) {
 		curBowler.setText( ( (Bowler)le.getBowler()).getNickName() );
 		if ( le.isMechanicalProblem() ) {
 			maintenance.setBackground( Color.RED );
-		}	
-		if ( lane.isPartyAssigned() == false ) {
-			viewLane.setEnabled( false );
-			viewPinSetter.setEnabled( false );
+		}
+		if ( !lane.isPartyAssigned() ) {
+			setLaneAndPinSetterStatus(false);
 		} else {
-			viewLane.setEnabled( true );
-			viewPinSetter.setEnabled( true );
+			setLaneAndPinSetterStatus(true);
 		}
 	}
+	public void setLaneAndPinSetterStatus(boolean value){
+		viewLane.setEnabled( value );
+		viewPinSetter.setEnabled( value );
+	}
 
+	public JLabel addLabeltojp( String text ){
+		JLabel newLabel = new JLabel( "Now Bowling: " );
+		jp.add(newLabel);
+		return newLabel;
+	}
 	public void receivePinsetterEvent(PinsetterEvent pe) {
 		pinsDown.setText( ( new Integer(pe.totalPinsDown()) ).toString() );
 //		foul.setText( ( new Boolean(pe.isFoulCommited()) ).toString() );

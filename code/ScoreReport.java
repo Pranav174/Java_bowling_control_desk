@@ -1,6 +1,6 @@
 /**
  * 
- * SMTP implementation based on code by Réal Gagnon mailto:real@rgagnon.com
+ * SMTP implementation based on code by Rjal Gagnon mailto:real@rgagnon.com
  * 
  */
 
@@ -9,7 +9,6 @@ import java.io.*;
 import java.util.Vector;
 import java.util.Iterator;
 import java.net.*;
-import java.awt.*;
 import java.awt.print.*;
 
 public class ScoreReport {
@@ -25,7 +24,12 @@ public class ScoreReport {
 		} catch (Exception e){System.err.println("Error: " + e);}
 		
 		Iterator scoreIt = v.iterator();
-		
+
+		formReport(scores, games, nick, full, scoreIt);
+
+	}
+
+	private void formReport(int[] scores, int games, String nick, String full, Iterator scoreIt) {
 		content = "";
 		content += "--Lucky Strike Bowling Alley Score Report--\n";
 		content += "\n";
@@ -47,7 +51,6 @@ public class ScoreReport {
 		}
 		content += "\n\n";
 		content += "Thank you for your continuing patronage.";
-
 	}
 
 	public void sendEmail(String recipient) {
@@ -60,26 +63,29 @@ public class ScoreReport {
 				new BufferedWriter(
 					new OutputStreamWriter(s.getOutputStream(), "8859_1"));
 
-			String boundary = "DataSeparatorString";
 
 			// here you are supposed to send your username
-			sendln(in, out, "HELO world");
-			sendln(in, out, "MAIL FROM: <mda2376@rit.edu>");
-			sendln(in, out, "RCPT TO: <" + recipient + ">");
-			sendln(in, out, "DATA");
-			sendln(out, "Subject: Bowling Score Report ");
-			sendln(out, "From: <Lucky Strikes Bowling Club>");
-
-			sendln(out, "Content-Type: text/plain; charset=\"us-ascii\"\r\n");
-			sendln(out, content + "\n\n");
-			sendln(out, "\r\n");
-
-			sendln(in, out, ".");
-			sendln(in, out, "QUIT");
+			formEmail(recipient, in, out);
 			s.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	private void formEmail(String recipient, BufferedReader in, BufferedWriter out) {
+		sendln(in, out, "HELO world");
+		sendln(in, out, "MAIL FROM: <mda2376@rit.edu>");
+		sendln(in, out, "RCPT TO: <" + recipient + ">");
+		sendln(in, out, "DATA");
+		sendln(out, "Subject: Bowling Score Report ");
+		sendln(out, "From: <Lucky Strikes Bowling Club>");
+
+		sendln(out, "Content-Type: text/plain; charset=\"us-ascii\"\r\n");
+		sendln(out, content + "\n\n");
+		sendln(out, "\r\n");
+
+		sendln(in, out, ".");
+		sendln(in, out, "QUIT");
 	}
 
 	public void sendPrintout() {
