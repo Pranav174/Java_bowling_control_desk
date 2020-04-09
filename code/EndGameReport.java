@@ -13,14 +13,11 @@ import javax.swing.border.*;
 import javax.swing.event.*;
 
 import java.util.*;
-import java.text.*;
 
 public class EndGameReport implements ActionListener, ListSelectionListener {
 
 	private JFrame win;
 	private JButton printButton, finished;
-	private JList memberList;
-	private Vector myVector;
 	private Vector retVal;
 
 	private int result;
@@ -28,7 +25,7 @@ public class EndGameReport implements ActionListener, ListSelectionListener {
 	private String selectedMember;
 
 	public EndGameReport( String partyName, Party party ) {
-	
+		JList memberList;
 		result =0;
 		retVal = new Vector();
 		win = new JFrame("End Game Report for " + partyName + "?" );
@@ -84,18 +81,10 @@ public class EndGameReport implements ActionListener, ListSelectionListener {
 		colPanel.add(partyPanel);
 		colPanel.add(buttonPanel);
 
-		win.getContentPane().add("Center", colPanel);
-
-		win.pack();
-
-		// Center Window on Screen
-		Dimension screenSize = (Toolkit.getDefaultToolkit()).getScreenSize();
-		win.setLocation(
-			((screenSize.width) / 2) - ((win.getSize().width) / 2),
-			((screenSize.height) / 2) - ((win.getSize().height) / 2));
-		win.show();
+		new DisplayWindow(win,colPanel,false);
 
 	}
+
 
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource().equals(printButton)) {		
@@ -136,7 +125,7 @@ public class EndGameReport implements ActionListener, ListSelectionListener {
 		}
 		Party party = new Party( bowlers );
 		String partyName="wank";
-		EndGameReport e = new EndGameReport( partyName, party );
+		new EndGameReport( partyName, party );
 	}
 	
 }

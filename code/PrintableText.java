@@ -6,11 +6,10 @@ import java.awt.*;
 import java.awt.print.*;
 import java.awt.geom.*;
 import java.awt.font.*;
-import java.text.*;
 
 public class PrintableText implements Printable {
-	String text;
-	int POINTS_PER_INCH;
+	private String text;
+	private int POINTS_PER_INCH;
 
 	public PrintableText(String t) {
 		POINTS_PER_INCH = 72;

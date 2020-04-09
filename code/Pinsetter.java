@@ -71,7 +71,6 @@
  */
 
 import java.util.*;
-import java.lang.Boolean;
 
 public class Pinsetter {
 
@@ -199,5 +198,5 @@ public class Pinsetter {
 		subscribers.add(subscriber);
 	}
 
-};
+}
 

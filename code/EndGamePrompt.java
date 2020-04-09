@@ -9,11 +9,6 @@
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
-import javax.swing.border.*;
-import javax.swing.event.*;
-
-import java.util.*;
-import java.text.*;
 
 public class EndGamePrompt implements ActionListener {
 
@@ -22,7 +17,6 @@ public class EndGamePrompt implements ActionListener {
 
 	private int result;
 
-	private String selectedNick, selectedMember;
 
 	public EndGamePrompt( String partyName ) {
 
@@ -69,18 +63,10 @@ public class EndGamePrompt implements ActionListener {
 		colPanel.add(labelPanel);
 		colPanel.add(buttonPanel);
 
-		win.getContentPane().add("Center", colPanel);
-
-		win.pack();
-
-		// Center Window on Screen
-		Dimension screenSize = (Toolkit.getDefaultToolkit()).getScreenSize();
-		win.setLocation(
-			((screenSize.width) / 2) - ((win.getSize().width) / 2),
-			((screenSize.height) / 2) - ((win.getSize().height) / 2));
-		win.show();
+		new DisplayWindow(win,colPanel,false);
 
 	}
+
 
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource().equals(yesButton)) {		
