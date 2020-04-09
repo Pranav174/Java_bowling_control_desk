@@ -92,17 +92,10 @@ public class LaneStatusView implements ActionListener, LaneObserver, PinsetterOb
 		maintenance.addActionListener(this);
 		maintenancePanel.add(maintenance);
 
-<<<<<<< HEAD
 		setLaneAndPinSetterStatus(false);
-
-=======
-		viewLane.setEnabled( false );
-		viewPinSetter.setEnabled( false );
-		pause.setEnabled( false );
 		quit.setEnabled(false);
 
 		buttonPanel.add(continuePanel);
->>>>>>> newFeatures
 		buttonPanel.add(viewLanePanel);
 		buttonPanel.add(viewPinSetterPanel);
 		buttonPanel.add(pausePanel);
@@ -137,36 +130,20 @@ public class LaneStatusView implements ActionListener, LaneObserver, PinsetterOb
 			if (e.getSource().equals(maintenance)) {
 				lane.unPauseGame();
 				maintenance.setBackground( Color.GREEN );
-<<<<<<< HEAD
-
-=======
 				quit.setEnabled(false);
 			}
-		}
-		if (e.getSource().equals(pause)) {
-//			System.out.println("Pause now");
-			if ( lane.isPartyAssigned() ) {
+			if (e.getSource().equals(pause)) {
 				lane.pauseGame();
 				maintenance.setBackground( Color.RED );
 				quit.setEnabled(true);
->>>>>>> newFeatures
 			}
-
-		}
-<<<<<<< HEAD
-
-
-=======
-		if (e.getSource().equals(quit)) {
-//			System.out.println("Quit now");
-			if ( lane.isPartyAssigned() ) {
-				lane.saveQuit();
+			if (e.getSource().equals(quit)) {
+					lane.saveQuit();
 			}
 		}
 		if (e.getSource().equals(contin)) {
 			new PausedGameView(lane);
 		}
->>>>>>> newFeatures
 	}
 
 	public void  viewLaneClicked(){
@@ -192,13 +169,6 @@ public class LaneStatusView implements ActionListener, LaneObserver, PinsetterOb
 		curBowler.setText( ( (Bowler)le.getBowler()).getNickName() );
 		if ( le.isMechanicalProblem() ) {
 			maintenance.setBackground( Color.RED );
-<<<<<<< HEAD
-		}
-		if ( !lane.isPartyAssigned() ) {
-			setLaneAndPinSetterStatus(false);
-		} else {
-			setLaneAndPinSetterStatus(true);
-=======
 			quit.setEnabled(true);
 		}
 		else {
@@ -206,21 +176,16 @@ public class LaneStatusView implements ActionListener, LaneObserver, PinsetterOb
 			quit.setEnabled(false);
 		}
 		if ( lane.isPartyAssigned() == false ) {
-			viewLane.setEnabled( false );
-			viewPinSetter.setEnabled( false );
-			pause.setEnabled( false );
-			contin.setEnabled(true);
+			setLaneAndPinSetterStatus(false);
 		} else {
-			viewLane.setEnabled( true );
-			viewPinSetter.setEnabled( true );
-			pause.setEnabled( true );
-			contin.setEnabled(false);
->>>>>>> newFeatures
+			setLaneAndPinSetterStatus(true);
 		}
 	}
 	public void setLaneAndPinSetterStatus(boolean value){
 		viewLane.setEnabled( value );
 		viewPinSetter.setEnabled( value );
+		pause.setEnabled( value );
+		contin.setEnabled( !value );
 	}
 
 	public JLabel addLabeltojp( String text ){

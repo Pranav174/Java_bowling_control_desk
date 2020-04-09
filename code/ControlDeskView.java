@@ -54,34 +54,14 @@ public class ControlDeskView implements ActionListener, ControlDeskObserver {
 		// Controls Panel
 		JPanel controlsPanel = initializePanel(3, 1, "Controls");
 
-<<<<<<< HEAD
-		addParty = new JButton("Add Party");
-		JPanel addPartyPanel = new JPanel();
-		addPartyPanel.setLayout(new FlowLayout());
-		addParty.addActionListener(this);
-		addPartyPanel.add(addParty);
-		controlsPanel.add(addPartyPanel);
-
-
-		finished = new JButton("Finished");
-		JPanel finishedPanel = new JPanel();
-		finishedPanel.setLayout(new FlowLayout());
-		finished.addActionListener(this);
-		finishedPanel.add(finished);
-		controlsPanel.add(finishedPanel);
-=======
 		addParty = new ButtonPanel("Add Party", this);
 		controlsPanel.add(addParty.getPanel());
-
-//		continueGame = new ButtonPanel("Continue Game", this);
-//		controlsPanel.add(continueGame.getPanel());
 
 		viewScores = new ButtonPanel("View Scores", this);
 		controlsPanel.add(viewScores.getPanel());
 		
 		finished = new ButtonPanel("Finished", this);
 		controlsPanel.add(finished.getPanel());
->>>>>>> newFeatures
 
 		// Lane Status Panel
 		JPanel laneStatusPanel = initializePanel(numLanes, 1, "Lane Status");
@@ -137,16 +117,8 @@ public class ControlDeskView implements ActionListener, ControlDeskObserver {
 	 */
 
 	public void actionPerformed(ActionEvent e) {
-<<<<<<< HEAD
-		if (e.getSource().equals(addParty)) {
-			new AddPartyView(this, maxMembers);
-		}
-		if (e.getSource().equals(assign)) {
-			controlDesk.assignLane();
-=======
 		if (e.getSource().equals(addParty.getButton())) {
 			new AddPartyView(this, maxMembers);
->>>>>>> newFeatures
 		}
 		if (e.getSource().equals(finished.getButton())) {
 			win.hide();
@@ -155,10 +127,6 @@ public class ControlDeskView implements ActionListener, ControlDeskObserver {
 		if (e.getSource().equals(viewScores.getButton())) {
 			new ScoreView();
 		}
-//		if (e.getSource().equals(continueGame.getButton())) {
-//			System.out.println("Continue Game");
-//			new PausedGameView();
-//		}
 	}
 
 	/**

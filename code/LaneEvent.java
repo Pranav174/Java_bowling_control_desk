@@ -28,7 +28,6 @@ import java.util.HashMap;
 public class LaneEvent {
 
 	private Party p;
-<<<<<<< HEAD
 	private int frame;
 	private int ball;
 	private Bowler bowler;
@@ -38,22 +37,9 @@ public class LaneEvent {
 	private int frameNum;
 	private int[] curScores;
 	private boolean mechProb;
+	private boolean resetJframe;
 
-	public LaneEvent( Party pty, int theIndex, Bowler theBowler, int[][] theCumulScore, HashMap theScore, int theFrameNum, int[] theCurScores, int theBall, boolean mechProblem) {
-=======
-	int frame;
-	int ball;
-	Bowler bowler;
-	int[][] cumulScore;
-	HashMap score;
-	int index;
-	int frameNum;
-	int[] curScores;
-	boolean mechProb;
-	boolean resetJframe;
-	
 	public LaneEvent( Party pty, int theIndex, Bowler theBowler, int[][] theCumulScore, HashMap theScore, int theFrameNum, int[] theCurScores, int theBall, boolean mechProblem, boolean resetJframe) {
->>>>>>> newFeatures
 		p = pty;
 		index = theIndex;
 		bowler = theBowler;
@@ -105,6 +91,10 @@ public class LaneEvent {
 
 	public Bowler getBowler() {
 		return bowler;
+	}
+
+	public boolean isResetJframe() {
+		return resetJframe;
 	}
 
 }
