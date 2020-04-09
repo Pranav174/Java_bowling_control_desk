@@ -30,7 +30,7 @@ public class ControlDeskView implements ActionListener, ControlDeskObserver {
 	private int maxMembers;
 	
 	private ControlDesk controlDesk;
-	ButtonPanel addParty,finished,viewScores,continueGame;
+	ButtonPanel addParty,finished,viewScores;
 	
 	/**
 	 * Displays a GUI representation of the ControlDesk

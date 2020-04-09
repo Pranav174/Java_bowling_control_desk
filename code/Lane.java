@@ -634,11 +634,6 @@ public class Lane extends Thread implements PinsetterObserver {
 			System.out.println("Save & Quit");
 			GameDetails gd = new GameDetails(this);
 			PausedGameFile.putPauseGame(gd);
-//				Vector<GameDetails> test = new Vector<GameDetails>();
-//				test.add(gd);
-//				PausedGameFile.pauseGame(gd);
-//				PausedGameFile.pauseGameList(test);
-//				PausedGameFile.viewGames();
 			//reset lane
 			partyAssigned = false;
 			party = null;
