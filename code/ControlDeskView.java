@@ -23,7 +23,6 @@ import java.util.*;
 
 public class ControlDeskView implements ActionListener, ControlDeskObserver {
 
-	private JButton addParty, finished, assign;
 	private JFrame win;
 	private JList partyList;
 	
@@ -31,7 +30,8 @@ public class ControlDeskView implements ActionListener, ControlDeskObserver {
 	private int maxMembers;
 	
 	private ControlDesk controlDesk;
-
+	ButtonPanel addParty,finished,viewScores,continueGame;
+	
 	/**
 	 * Displays a GUI representation of the ControlDesk
 	 *
@@ -55,26 +55,17 @@ public class ControlDeskView implements ActionListener, ControlDeskObserver {
 		controlsPanel.setLayout(new GridLayout(3, 1));
 		controlsPanel.setBorder(new TitledBorder("Controls"));
 
-		addParty = new JButton("Add Party");
-		JPanel addPartyPanel = new JPanel();
-		addPartyPanel.setLayout(new FlowLayout());
-		addParty.addActionListener(this);
-		addPartyPanel.add(addParty);
-		controlsPanel.add(addPartyPanel);
+		addParty = new ButtonPanel("Add Party", this);
+		controlsPanel.add(addParty.getPanel());
 
-		assign = new JButton("Assign Lanes");
-		JPanel assignPanel = new JPanel();
-		assignPanel.setLayout(new FlowLayout());
-		assign.addActionListener(this);
-		assignPanel.add(assign);
-//		controlsPanel.add(assignPanel);
+//		continueGame = new ButtonPanel("Continue Game", this);
+//		controlsPanel.add(continueGame.getPanel());
 
-		finished = new JButton("Finished");
-		JPanel finishedPanel = new JPanel();
-		finishedPanel.setLayout(new FlowLayout());
-		finished.addActionListener(this);
-		finishedPanel.add(finished);
-		controlsPanel.add(finishedPanel);
+		viewScores = new ButtonPanel("View Scores", this);
+		controlsPanel.add(viewScores.getPanel());
+		
+		finished = new ButtonPanel("Finished", this);
+		controlsPanel.add(finished.getPanel());
 
 		// Lane Status Panel
 		JPanel laneStatusPanel = new JPanel();
@@ -144,16 +135,20 @@ public class ControlDeskView implements ActionListener, ControlDeskObserver {
 	 */
 
 	public void actionPerformed(ActionEvent e) {
-		if (e.getSource().equals(addParty)) {
-			AddPartyView addPartyWin = new AddPartyView(this, maxMembers);
+		if (e.getSource().equals(addParty.getButton())) {
+			new AddPartyView(this, maxMembers);
 		}
-		if (e.getSource().equals(assign)) {
-			controlDesk.assignLane();
-		}
-		if (e.getSource().equals(finished)) {
+		if (e.getSource().equals(finished.getButton())) {
 			win.hide();
 			System.exit(0);
 		}
+		if (e.getSource().equals(viewScores.getButton())) {
+			new ScoreView();
+		}
+//		if (e.getSource().equals(continueGame.getButton())) {
+//			System.out.println("Continue Game");
+//			new PausedGameView();
+//		}
 	}
 
 	/**

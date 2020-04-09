@@ -13,10 +13,11 @@ public class ScoreHistoryFile {
 
 	private static String SCOREHISTORY_DAT = "SCOREHISTORY.DAT";
 
-	public static void addScore(String nick, String date, String score)
+//	public static void addScore(String nick, String date, String score)
+	public static void addScore(Score score)
 		throws IOException, FileNotFoundException {
 
-		String data = nick + "\t" + date + "\t" + score + "\n";
+		String data = score.toString() + "\n";
 
 		RandomAccessFile out = new RandomAccessFile(SCOREHISTORY_DAT, "rw");
 		out.skipBytes((int) out.length());
@@ -41,5 +42,17 @@ public class ScoreHistoryFile {
 		}
 		return scores;
 	}
+	
+	public static Vector getAllScores()
+			throws IOException, FileNotFoundException {
+			Vector scores = new Vector();
 
+			BufferedReader in = new BufferedReader(new FileReader(SCOREHISTORY_DAT));
+			String data;
+			while ((data = in.readLine()) != null) {
+				String[] scoredata = data.split("\t");
+				scores.add(new Score(scoredata[0], scoredata[1], scoredata[2]));
+			}
+			return scores;
+	}
 }

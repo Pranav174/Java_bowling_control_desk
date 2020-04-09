@@ -37,8 +37,9 @@ public class LaneEvent {
 	int frameNum;
 	int[] curScores;
 	boolean mechProb;
+	boolean resetJframe;
 	
-	public LaneEvent( Party pty, int theIndex, Bowler theBowler, int[][] theCumulScore, HashMap theScore, int theFrameNum, int[] theCurScores, int theBall, boolean mechProblem) {
+	public LaneEvent( Party pty, int theIndex, Bowler theBowler, int[][] theCumulScore, HashMap theScore, int theFrameNum, int[] theCurScores, int theBall, boolean mechProblem, boolean resetJframe) {
 		p = pty;
 		index = theIndex;
 		bowler = theBowler;
@@ -48,6 +49,7 @@ public class LaneEvent {
 		frameNum = theFrameNum;
 		ball = theBall;	
 		mechProb = mechProblem;
+		this.resetJframe = resetJframe;
 	}
 	
 	public boolean isMechanicalProblem() {
