@@ -32,7 +32,6 @@ import javax.swing.border.*;
 import javax.swing.event.*;
 
 import java.util.*;
-import java.text.*;
 
 /**
  * Constructor for GUI used to Add Parties to the waiting party queue.
@@ -47,7 +46,6 @@ public class AddPartyView implements ActionListener, ListSelectionListener {
 	private JButton addPatron, newPatron, remPatron, finished;
 	private JList partyList, allBowlers;
 	private Vector party, bowlerdb;
-	private Integer lock;
 
 	private ControlDeskView controlDesk;
 
@@ -66,41 +64,10 @@ public class AddPartyView implements ActionListener, ListSelectionListener {
 		colPanel.setLayout(new GridLayout(1, 3));
 
 		// Party Panel
-		JPanel partyPanel = new JPanel();
-		partyPanel.setLayout(new FlowLayout());
-		partyPanel.setBorder(new TitledBorder("Your Party"));
-
-		party = new Vector();
-		Vector empty = new Vector();
-		empty.add("(Empty)");
-
-		partyList = new JList(empty);
-		partyList.setFixedCellWidth(120);
-		partyList.setVisibleRowCount(5);
-		partyList.addListSelectionListener(this);
-		JScrollPane partyPane = new JScrollPane(partyList);
-		//        partyPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-		partyPanel.add(partyPane);
+		JPanel partyPanel = chosenBowlersPanel();
 
 		// Bowler Database
-		JPanel bowlerPanel = new JPanel();
-		bowlerPanel.setLayout(new FlowLayout());
-		bowlerPanel.setBorder(new TitledBorder("Bowler Database"));
-
-		try {
-			bowlerdb = new Vector(BowlerFile.getBowlers());
-		} catch (Exception e) {
-			System.err.println("File Error");
-			bowlerdb = new Vector();
-		}
-		allBowlers = new JList(bowlerdb);
-		allBowlers.setVisibleRowCount(8);
-		allBowlers.setFixedCellWidth(120);
-		JScrollPane bowlerPane = new JScrollPane(allBowlers);
-		bowlerPane.setVerticalScrollBarPolicy(
-			JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-		allBowlers.addListSelectionListener(this);
-		bowlerPanel.add(bowlerPane);
+		JPanel bowlerPanel = viewAllBowlers();
 
 		// Button Panel
 		JPanel buttonPanel = new JPanel();
@@ -142,49 +109,98 @@ public class AddPartyView implements ActionListener, ListSelectionListener {
 		colPanel.add(bowlerPanel);
 		colPanel.add(buttonPanel);
 
-		win.getContentPane().add("Center", colPanel);
-
-		win.pack();
-
-		// Center Window on Screen
-		Dimension screenSize = (Toolkit.getDefaultToolkit()).getScreenSize();
-		win.setLocation(
-			((screenSize.width) / 2) - ((win.getSize().width) / 2),
-			((screenSize.height) / 2) - ((win.getSize().height) / 2));
-		win.show();
+		new DisplayWindow(win ,colPanel, false);
 
 	}
+
+	private JPanel viewAllBowlers() {
+		JPanel bowlerPanel = new JPanel();
+		bowlerPanel.setLayout(new FlowLayout());
+		bowlerPanel.setBorder(new TitledBorder("Bowler Database"));
+
+		try {
+			bowlerdb = new Vector(BowlerFile.getBowlers());
+		} catch (Exception e) {
+			System.err.println("File Error");
+			bowlerdb = new Vector();
+		}
+		allBowlers = new JList(bowlerdb);
+		allBowlers.setVisibleRowCount(8);
+		allBowlers.setFixedCellWidth(120);
+		JScrollPane bowlerPane = new JScrollPane(allBowlers);
+		bowlerPane.setVerticalScrollBarPolicy(
+			JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		allBowlers.addListSelectionListener(this);
+		bowlerPanel.add(bowlerPane);
+		return bowlerPanel;
+	}
+
+	private JPanel chosenBowlersPanel() {
+		JPanel partyPanel = new JPanel();
+		partyPanel.setLayout(new FlowLayout());
+		partyPanel.setBorder(new TitledBorder("Your Party"));
+
+		party = new Vector();
+		Vector empty = new Vector();
+		empty.add("(Empty)");
+
+		partyList = new JList(empty);
+		partyList.setFixedCellWidth(120);
+		partyList.setVisibleRowCount(5);
+		partyList.addListSelectionListener(this);
+		JScrollPane partyPane = new JScrollPane(partyList);
+		//        partyPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		partyPanel.add(partyPane);
+		return partyPanel;
+	}
+
 
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource().equals(addPatron)) {
-			if (selectedNick != null && party.size() < maxSize) {
-				if (party.contains(selectedNick)) {
-					System.err.println("Member already in Party");
-				} else {
-					party.add(selectedNick);
-					partyList.setListData(party);
-				}
-			}
+			addPatronClicked();
 		}
 		if (e.getSource().equals(remPatron)) {
-			if (selectedMember != null) {
-				party.removeElement(selectedMember);
-				partyList.setListData(party);
-			}
+			remPatronClicked();
 		}
 		if (e.getSource().equals(newPatron)) {
-			NewPatronView newPatron = new NewPatronView( this );
+			newPatronClicked();
 		}
 		if (e.getSource().equals(finished)) {
-			if ( party != null && party.size() > 0) {
-				controlDesk.updateAddParty( this );
-			}
-			win.hide();
+			finishedClicked();
 		}
 
 	}
 
-/**
+	private void finishedClicked() {
+		if ( party != null && party.size() > 0) {
+			controlDesk.updateAddParty( this );
+		}
+		win.hide();
+	}
+
+	private void newPatronClicked() {
+		NewPatronView newPatron = new NewPatronView( this );
+	}
+
+	private void remPatronClicked() {
+		if (selectedMember != null) {
+			party.removeElement(selectedMember);
+			partyList.setListData(party);
+		}
+	}
+
+	private void addPatronClicked() {
+		if (selectedNick != null && party.size() < maxSize) {
+			if (party.contains(selectedNick)) {
+				System.err.println("Member already in Party");
+			} else {
+				party.add(selectedNick);
+				partyList.setListData(party);
+			}
+		}
+	}
+
+	/**
  * Handler for List actions
  * @param e the ListActionEvent that triggered the handler
  */

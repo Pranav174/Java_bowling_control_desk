@@ -10,24 +10,23 @@ import java.util.*;
 
 public class LaneView implements LaneObserver, ActionListener {
 
-	private int roll;
 	private boolean initDone = true;
 
-	JFrame frame;
-	Container cpanel;
-	Vector bowlers;
-	int cur;
-	Iterator bowlIt;
+	private JFrame frame;
+	private Container cpanel;
+	private Vector bowlers;
+	private int cur;
+	private Iterator bowlIt;
 
-	JPanel[][] balls;
-	JLabel[][] ballLabel;
-	JPanel[][] scores;
-	JLabel[][] scoreLabel;
-	JPanel[][] ballGrid;
-	JPanel[] pins;
+	private JPanel[][] balls;
+	private JLabel[][] ballLabel;
+	private JPanel[][] scores;
+	private JLabel[][] scoreLabel;
+	private JPanel[][] ballGrid;
+	private JPanel[] pins;
 
-	JButton maintenance;
-	Lane lane;
+	private JButton maintenance;
+	private Lane lane;
 
 	public LaneView(Lane lane, int laneNum) {
 
@@ -40,7 +39,7 @@ public class LaneView implements LaneObserver, ActionListener {
 
 		frame.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
-				frame.hide();
+				frame.dispose();
 			}
 		});
 
@@ -53,7 +52,7 @@ public class LaneView implements LaneObserver, ActionListener {
 	}
 
 	public void hide() {
-		frame.hide();
+		frame.dispose();
 	}
 
 	private JPanel makeFrame(Party party) {
@@ -83,22 +82,15 @@ public class LaneView implements LaneObserver, ActionListener {
 			}
 		}
 
-		for (int i = 0; i != numBowlers; i++) {
-			for (int j = 0; j != 9; j++) {
-				ballGrid[i][j] = new JPanel();
-				ballGrid[i][j].setLayout(new GridLayout(0, 3));
-				ballGrid[i][j].add(new JLabel("  "), BorderLayout.EAST);
-				ballGrid[i][j].add(balls[i][2 * j], BorderLayout.EAST);
-				ballGrid[i][j].add(balls[i][2 * j + 1], BorderLayout.EAST);
-			}
-			int j = 9;
-			ballGrid[i][j] = new JPanel();
-			ballGrid[i][j].setLayout(new GridLayout(0, 3));
-			ballGrid[i][j].add(balls[i][2 * j]);
-			ballGrid[i][j].add(balls[i][2 * j + 1]);
-			ballGrid[i][j].add(balls[i][2 * j + 2]);
-		}
+		createBallGrid(numBowlers);
 
+		createScoreBoard(numBowlers, panel);
+
+		initDone = true;
+		return panel;
+	}
+
+	private void createScoreBoard(int numBowlers, JPanel panel) {
 		for (int i = 0; i != numBowlers; i++) {
 			pins[i] = new JPanel();
 			pins[i].setBorder(
@@ -117,9 +109,24 @@ public class LaneView implements LaneObserver, ActionListener {
 			}
 			panel.add(pins[i]);
 		}
+	}
 
-		initDone = true;
-		return panel;
+	private void createBallGrid(int numBowlers) {
+		for (int i = 0; i != numBowlers; i++) {
+			for (int j = 0; j != 9; j++) {
+				ballGrid[i][j] = new JPanel();
+				ballGrid[i][j].setLayout(new GridLayout(0, 3));
+				ballGrid[i][j].add(new JLabel("  "), BorderLayout.EAST);
+				ballGrid[i][j].add(balls[i][2 * j], BorderLayout.EAST);
+				ballGrid[i][j].add(balls[i][2 * j + 1], BorderLayout.EAST);
+			}
+			int j = 9;
+			ballGrid[i][j] = new JPanel();
+			ballGrid[i][j].setLayout(new GridLayout(0, 3));
+			ballGrid[i][j].add(balls[i][2 * j]);
+			ballGrid[i][j].add(balls[i][2 * j + 1]);
+			ballGrid[i][j].add(balls[i][2 * j + 2]);
+		}
 	}
 
 	public void receiveLaneEvent(LaneEvent le) {
@@ -133,9 +140,9 @@ public class LaneView implements LaneObserver, ActionListener {
 				}
 			}
 
-			if (le.getFrameNum() == 1
+			if ((le.getFrameNum() == 1
 				&& le.getBall() == 0
-				&& le.getIndex() == 0) {
+				&& le.getIndex() == 0)||le.isResetJframe()) {
 				System.out.println("Making the frame.");
 				cpanel.removeAll();
 				cpanel.add(makeFrame(le.getParty()), "Center");
@@ -168,36 +175,40 @@ public class LaneView implements LaneObserver, ActionListener {
 							(new Integer(lescores[k][i])).toString());
 				}
 				for (int i = 0; i < 21; i++) {
-					if (((int[]) ((HashMap) le.getScore())
-						.get(bowlers.get(k)))[i]
-						!= -1)
-						if (((int[]) ((HashMap) le.getScore())
-							.get(bowlers.get(k)))[i]
-							== 10
-							&& (i % 2 == 0 || i == 19))
-							ballLabel[k][i].setText("X");
-						else if (
-							i > 0
-								&& ((int[]) ((HashMap) le.getScore())
-									.get(bowlers.get(k)))[i]
-									+ ((int[]) ((HashMap) le.getScore())
-										.get(bowlers.get(k)))[i
-									- 1]
-									== 10
-								&& i % 2 == 1)
-							ballLabel[k][i].setText("/");
-						else if ( ((int[])((HashMap) le.getScore()).get(bowlers.get(k)))[i] == -2 ){
-							
-							ballLabel[k][i].setText("F");
-						} else
-							ballLabel[k][i].setText(
-								(new Integer(((int[]) ((HashMap) le.getScore())
-									.get(bowlers.get(k)))[i]))
-									.toString());
+					rollBowl(le, k, i);
 				}
 			}
 
 		}
+	}
+
+	private void rollBowl(LaneEvent le, int k, int i) {
+		if (((int[]) ((HashMap) le.getScore())
+			.get(bowlers.get(k)))[i]
+			!= -1)
+			if (((int[]) ((HashMap) le.getScore())
+				.get(bowlers.get(k)))[i]
+				== 10
+				&& (i % 2 == 0 || i == 19))
+				ballLabel[k][i].setText("X");
+			else if (
+				i > 0
+					&& ((int[]) ((HashMap) le.getScore())
+						.get(bowlers.get(k)))[i]
+						+ ((int[]) ((HashMap) le.getScore())
+							.get(bowlers.get(k)))[i
+						- 1]
+						== 10
+					&& i % 2 == 1)
+				ballLabel[k][i].setText("/");
+			else if ( ((int[])((HashMap) le.getScore()).get(bowlers.get(k)))[i] == -2 ){
+
+				ballLabel[k][i].setText("F");
+			} else
+				ballLabel[k][i].setText(
+					(new Integer(((int[]) ((HashMap) le.getScore())
+						.get(bowlers.get(k)))[i]))
+						.toString());
 	}
 
 	public void actionPerformed(ActionEvent e) {

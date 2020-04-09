@@ -20,14 +20,8 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.*;
-import javax.swing.event.*;
-
-import java.util.*;
-import java.text.*;
-
 public class NewPatronView implements ActionListener {
 
-	private int maxSize;
 
 	private JFrame win;
 	private JButton abort, finished;
@@ -42,7 +36,7 @@ public class NewPatronView implements ActionListener {
 
 	public NewPatronView(AddPartyView v) {
 
-		addParty=v;	
+		addParty = v;
 		done = false;
 
 		win = new JFrame("Add Patron");
@@ -107,17 +101,7 @@ public class NewPatronView implements ActionListener {
 		colPanel.add(patronPanel, "Center");
 		colPanel.add(buttonPanel, "East");
 
-		win.getContentPane().add("Center", colPanel);
-
-		win.pack();
-
-		// Center Window on Screen
-		Dimension screenSize = (Toolkit.getDefaultToolkit()).getScreenSize();
-		win.setLocation(
-			((screenSize.width) / 2) - ((win.getSize().width) / 2),
-			((screenSize.height) / 2) - ((win.getSize().height) / 2));
-		win.show();
-
+		new DisplayWindow(win, colPanel, false);
 	}
 
 	public void actionPerformed(ActionEvent e) {
