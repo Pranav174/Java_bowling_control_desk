@@ -17,7 +17,7 @@ public class LaneStatusView implements ActionListener, LaneObserver, PinsetterOb
 
 	private JLabel curBowler, pinsDown;
 	private JButton viewLane;
-	private JButton viewPinSetter, maintenance;
+	private JButton viewPinSetter, maintenance, pause, quit, contin;
 
 	private PinSetterView psv;
 	private LaneView lv;
@@ -66,6 +66,24 @@ public class LaneStatusView implements ActionListener, LaneObserver, PinsetterOb
 		viewPinSetterPanel.setLayout(new FlowLayout());
 		viewPinSetter.addActionListener(this);
 		viewPinSetterPanel.add(viewPinSetter);
+		
+		pause = new JButton("Pause");
+		JPanel pausePanel = new JPanel();
+		pausePanel.setLayout(new FlowLayout());
+		pause.addActionListener(this);
+		pausePanel.add(pause);
+		
+		quit = new JButton("Save & Quit");
+		JPanel quitPanel = new JPanel();
+		quitPanel.setLayout(new FlowLayout());
+		quit.addActionListener(this);
+		quitPanel.add(quit);
+		
+		contin = new JButton("Continue");
+		JPanel continuePanel = new JPanel();
+		continuePanel.setLayout(new FlowLayout());
+		contin.addActionListener(this);
+		continuePanel.add(contin);
 
 		maintenance = new JButton("     ");
 		maintenance.setBackground( Color.GREEN );
@@ -74,10 +92,21 @@ public class LaneStatusView implements ActionListener, LaneObserver, PinsetterOb
 		maintenance.addActionListener(this);
 		maintenancePanel.add(maintenance);
 
+<<<<<<< HEAD
 		setLaneAndPinSetterStatus(false);
 
+=======
+		viewLane.setEnabled( false );
+		viewPinSetter.setEnabled( false );
+		pause.setEnabled( false );
+		quit.setEnabled(false);
+
+		buttonPanel.add(continuePanel);
+>>>>>>> newFeatures
 		buttonPanel.add(viewLanePanel);
 		buttonPanel.add(viewPinSetterPanel);
+		buttonPanel.add(pausePanel);
+		buttonPanel.add(quitPanel);
 		buttonPanel.add(maintenancePanel);
 
 //		JLabel cLabel = addLabeltojp( "Now Bowling: " );
@@ -108,12 +137,36 @@ public class LaneStatusView implements ActionListener, LaneObserver, PinsetterOb
 			if (e.getSource().equals(maintenance)) {
 				lane.unPauseGame();
 				maintenance.setBackground( Color.GREEN );
+<<<<<<< HEAD
 
+=======
+				quit.setEnabled(false);
+			}
+		}
+		if (e.getSource().equals(pause)) {
+//			System.out.println("Pause now");
+			if ( lane.isPartyAssigned() ) {
+				lane.pauseGame();
+				maintenance.setBackground( Color.RED );
+				quit.setEnabled(true);
+>>>>>>> newFeatures
 			}
 
 		}
+<<<<<<< HEAD
 
 
+=======
+		if (e.getSource().equals(quit)) {
+//			System.out.println("Quit now");
+			if ( lane.isPartyAssigned() ) {
+				lane.saveQuit();
+			}
+		}
+		if (e.getSource().equals(contin)) {
+			new PausedGameView(lane);
+		}
+>>>>>>> newFeatures
 	}
 
 	public void  viewLaneClicked(){
@@ -139,11 +192,30 @@ public class LaneStatusView implements ActionListener, LaneObserver, PinsetterOb
 		curBowler.setText( ( (Bowler)le.getBowler()).getNickName() );
 		if ( le.isMechanicalProblem() ) {
 			maintenance.setBackground( Color.RED );
+<<<<<<< HEAD
 		}
 		if ( !lane.isPartyAssigned() ) {
 			setLaneAndPinSetterStatus(false);
 		} else {
 			setLaneAndPinSetterStatus(true);
+=======
+			quit.setEnabled(true);
+		}
+		else {
+			maintenance.setBackground( Color.GREEN );
+			quit.setEnabled(false);
+		}
+		if ( lane.isPartyAssigned() == false ) {
+			viewLane.setEnabled( false );
+			viewPinSetter.setEnabled( false );
+			pause.setEnabled( false );
+			contin.setEnabled(true);
+		} else {
+			viewLane.setEnabled( true );
+			viewPinSetter.setEnabled( true );
+			pause.setEnabled( true );
+			contin.setEnabled(false);
+>>>>>>> newFeatures
 		}
 	}
 	public void setLaneAndPinSetterStatus(boolean value){

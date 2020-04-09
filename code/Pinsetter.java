@@ -187,6 +187,14 @@ public class Pinsetter {
 		}
 	}		
 
+	public boolean isFoul() {
+		return foul;
+	}
+
+	public boolean[] getPins() {
+		return pins;
+	}
+
 	/** subscribe()
 	 * 
 	 * subscribe objects to send events to

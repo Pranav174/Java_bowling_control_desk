@@ -23,7 +23,6 @@ import java.util.*;
 
 public class ControlDeskView implements ActionListener, ControlDeskObserver {
 
-	private JButton addParty, finished, assign;
 	private JFrame win;
 	private JList partyList;
 
@@ -31,7 +30,8 @@ public class ControlDeskView implements ActionListener, ControlDeskObserver {
 	private int maxMembers;
 
 	private ControlDesk controlDesk;
-
+	ButtonPanel addParty,finished,viewScores;
+	
 	/**
 	 * Displays a GUI representation of the ControlDesk
 	 *
@@ -54,6 +54,7 @@ public class ControlDeskView implements ActionListener, ControlDeskObserver {
 		// Controls Panel
 		JPanel controlsPanel = initializePanel(3, 1, "Controls");
 
+<<<<<<< HEAD
 		addParty = new JButton("Add Party");
 		JPanel addPartyPanel = new JPanel();
 		addPartyPanel.setLayout(new FlowLayout());
@@ -68,6 +69,19 @@ public class ControlDeskView implements ActionListener, ControlDeskObserver {
 		finished.addActionListener(this);
 		finishedPanel.add(finished);
 		controlsPanel.add(finishedPanel);
+=======
+		addParty = new ButtonPanel("Add Party", this);
+		controlsPanel.add(addParty.getPanel());
+
+//		continueGame = new ButtonPanel("Continue Game", this);
+//		controlsPanel.add(continueGame.getPanel());
+
+		viewScores = new ButtonPanel("View Scores", this);
+		controlsPanel.add(viewScores.getPanel());
+		
+		finished = new ButtonPanel("Finished", this);
+		controlsPanel.add(finished.getPanel());
+>>>>>>> newFeatures
 
 		// Lane Status Panel
 		JPanel laneStatusPanel = initializePanel(numLanes, 1, "Lane Status");
@@ -123,16 +137,28 @@ public class ControlDeskView implements ActionListener, ControlDeskObserver {
 	 */
 
 	public void actionPerformed(ActionEvent e) {
+<<<<<<< HEAD
 		if (e.getSource().equals(addParty)) {
 			new AddPartyView(this, maxMembers);
 		}
 		if (e.getSource().equals(assign)) {
 			controlDesk.assignLane();
+=======
+		if (e.getSource().equals(addParty.getButton())) {
+			new AddPartyView(this, maxMembers);
+>>>>>>> newFeatures
 		}
-		if (e.getSource().equals(finished)) {
+		if (e.getSource().equals(finished.getButton())) {
 			win.hide();
 			System.exit(0);
 		}
+		if (e.getSource().equals(viewScores.getButton())) {
+			new ScoreView();
+		}
+//		if (e.getSource().equals(continueGame.getButton())) {
+//			System.out.println("Continue Game");
+//			new PausedGameView();
+//		}
 	}
 
 	/**

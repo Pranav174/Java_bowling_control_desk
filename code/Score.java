@@ -29,9 +29,17 @@ public class Score {
 	public String getScore() {
 		return score;
 	}
+	
+	public int getScoreInt() {
+		return Integer.parseInt(score.trim());
+	}
 
 	public String toString() {
 		return nick + "\t" + date + "\t" + score;
+	}
+	
+	public String toStringPretty() {
+		return score + " by " + nick + " at " + date;
 	}
 
 }
